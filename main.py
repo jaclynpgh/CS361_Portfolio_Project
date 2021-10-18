@@ -6,26 +6,23 @@ from tkinter import filedialog
 
 LARGE_FONT = ("Calibri", 15)
 
-
 class MicroTA(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        container = tk.Frame(self, height='350', width ='150')
+
+        container = tk.Frame(self)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
         container.pack()
-
 
         self.frames = {}
 
-        for F in (StartPage, Pittsburgh, NewYork, Chicago, PittHotels, PittRestaurants):
+        for F in (StartPage, Pittsburgh, NewYork, Chicago, PittHotels, PittRestaurants, Map):
             frame = F(container, self)
-
             self.frames[F] = frame
-
             frame.grid(row=0, column=0, sticky="nsew")
+
 
         self.show_frame(StartPage)
 
@@ -33,10 +30,28 @@ class MicroTA(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+class City(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        home = tk.Button(self, text="Back",
+                         command=lambda: controller.show_frame(StartPage))
+        home.grid(row=0, column=0)
+
+        label = tk.Label(self, text="Let's Plan.", font=LARGE_FONT)
+        label.grid(row=1, column = 1, pady=10)
+        style = Style()
+        style.configure('W.TButton', font=('calibri', 13), foreground='black')
+        b1 = Button(self, text="Hotels", style='W.TButton', command=lambda: controller.show_frame(PittHotels))
+        b2 = Button(self, text="Restaurants", style='W.TButton', command=lambda: controller.show_frame(PittRestaurants))
+        b1.grid(row=2, column=0, padx=50)
+        b2.grid(row=2, column=2, padx=50)
+
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
         style = Style()
         heading = tk.Label(self,
             text="Discover.\nPlan.\n Personalize.\n\nYour Micro Travel Agent\n \n\nWhere to?",
@@ -56,6 +71,7 @@ class StartPage(tk.Frame):
         b3.grid(row=1, column=2, padx=15, pady=90)
 
 
+
 class Pittsburgh(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -65,13 +81,16 @@ class Pittsburgh(tk.Frame):
         home.grid(row=0, column=0)
 
         label = tk.Label(self, text="Let's Plan.", font=LARGE_FONT)
-        label.grid(row=1, column = 1, pady=10)
+        label.grid(row=1, column = 2, pady=50)
         style = Style()
         style.configure('W.TButton', font=('calibri', 13), foreground='black')
         b1 = Button(self, text="Hotels", style='W.TButton', command=lambda: controller.show_frame(PittHotels))
         b2 = Button(self, text="Restaurants", style='W.TButton', command=lambda: controller.show_frame(PittRestaurants))
-        b1.grid(row=2, column=0, padx=50)
+        b3 = Button(self, text="Map", style='W.TButton', command=lambda: controller.show_frame(Map))
+
+        b1.grid(row=2, column=1)
         b2.grid(row=2, column=2, padx=50)
+        b3.grid(row=2, column=3)
 
 
 
@@ -89,6 +108,8 @@ class PittRestaurants(tk.Frame):
         txt = file.read()
         label.config(text=txt, font=LARGE_FONT)
         file.close()
+
+
 
 
 
@@ -133,6 +154,18 @@ class Chicago(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Page Three!!!", font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = tk.Button(self, text="Back",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+class Map(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Map", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
         button1 = tk.Button(self, text="Back",
