@@ -1,3 +1,8 @@
+# Author: Jaclyn Sabo
+# Date: Fall 2021
+# Course: CS361
+# Sources: //www.geeksforgeeks.org/tkinter-application-to-switch-between-different-page-frames/
+
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -5,7 +10,7 @@ from tkinter.ttk import *
 from PIL import ImageTk, Image
 
 LARGE_FONT = ("Calibri", 15)
-HEADING = ("Calibri", 18)
+HEADING = ("Calibri", 18, 'bold')
 
 class MicroTA(tk.Tk):
 
@@ -14,9 +19,10 @@ class MicroTA(tk.Tk):
 
 
         container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-        container.pack()
+
 
         self.frames = {}
 
@@ -36,7 +42,6 @@ class MicroTA(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
         style = Style()
         heading = tk.Label(self,
             text="Discover.\nPlan.\n Personalize.\n\nYour Micro Travel Agent\n \n\nWhere to?",
@@ -65,8 +70,18 @@ class Pittsburgh(tk.Frame):
                          command=lambda: controller.show_frame(StartPage))
         home.grid(row=0, column=0, pady=10,padx=5)
 
+        IMAGE_PATH = 'pgh.png'
+        WIDTH, HEIGHT = 500, 700
+
+        # Display image on a Label widget.
+        img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        lbl = tk.Label(self, image=img)
+        lbl.img = img  # Keep a reference in case this code put is in a function.
+        lbl.place(relx=0.5, rely=0.5, anchor='center')
+
+
         label = tk.Label(self, text="Pittsburgh.\n\nLet's Plan.", font=HEADING)
-        label.grid(row=1, column = 2)
+        label.grid(row=1, column = 2, pady=20)
         style = Style()
         style.configure('W.TButton', font=('calibri', 13), foreground='black')
         b1 = Button(self, text="Hotels", style='W.TButton', command=lambda: controller.show_frame(PittHotels))
