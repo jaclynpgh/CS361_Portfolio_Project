@@ -42,4 +42,7 @@ for i in links:
 
         pass
 
-
+if __name__ == "__main__":
+    query = input("Enter a search term for your image: ")
+    results = image_search(query)
+    print(results)
