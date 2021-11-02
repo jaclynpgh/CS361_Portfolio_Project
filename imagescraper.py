@@ -1,7 +1,6 @@
-import requests, shutil
+import requests
 from bs4 import BeautifulSoup
-import os
-from urllib.request import urlretrieve, urlopen
+
 
 def image_scraper(query):
     adlt = 'moderate'
@@ -26,6 +25,8 @@ def image_scraper(query):
         except:
 
             pass
+
+
 
 
 if __name__ == "__main__":
