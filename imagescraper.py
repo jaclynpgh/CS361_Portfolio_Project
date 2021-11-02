@@ -10,7 +10,7 @@ def image_scraper(url):
 
     soup = BeautifulSoup(response.text, 'html.parser')
     img_tags = soup.find_all('img')
-
+    # create dictionary to add image alt tag and source link
     images = {}
     for img in img_tags:
         try:
