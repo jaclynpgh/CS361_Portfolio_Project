@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
-
+import json
 def image_scraper(query):
     adlt = 'moderate'
     search = query.strip()
@@ -13,18 +12,19 @@ def image_scraper(query):
     headers = {"user-agent": USER_AGENT}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
-
+    image_dict = {}
     # finds image links
-    links = soup.find_all('a', class_='iusc')
-
-    for i in links:
+    images = soup.find_all('a', class_='iusc')
+    for i in images:
         try:
             img_url = eval(i['m'])['murl']
             img_title = img_url.split("/")[-1]
-            print(img_title,':', img_url)
+            image_dict[img_title] = img_url
+           # print(img_title,':', img_url)
         except:
 
             pass
+    return json.dumps(image_dict, indent=4)
 
 
 
@@ -32,3 +32,4 @@ def image_scraper(query):
 if __name__ == "__main__":
     query = input("Enter a search term for your image: ")
     results = image_scraper(query)
+    print(results)
