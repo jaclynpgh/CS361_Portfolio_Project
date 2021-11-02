@@ -5,7 +5,9 @@ import json
 
 
 def image_scraper(url):
-
+    """scrapes user inputed url for all images on a website and
+    :param http url ex. http://www.cookinglight.com
+    :return dictionary key:alt text; value: source link"""
     response = requests.get(url)
 
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -23,6 +25,6 @@ def image_scraper(url):
 
 
 if __name__ == "__main__":
-    url = input("Enter a website: ")
+    url = input("Enter a website formatted with 'http://': ")
     results = image_scraper(url)
     print(results)
