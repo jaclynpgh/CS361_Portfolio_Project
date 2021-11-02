@@ -1,4 +1,5 @@
-
+# sources: https://www.youtube.com/watch?v=stIxEKR7o-c
+# https://github.com/jhnwr/image-downloader/blob/main/imagedownloader.py
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -22,6 +23,7 @@ def image_scraper(url):
         except:
             pass
     return json.dumps(images, indent=4)
+
 
 
 if __name__ == "__main__":
