@@ -1,8 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-import json
+
 
 def image_scraper(query):
+    """scrapes user search term for all images via bing image search
+    :param http url ex. https://www.cookinglight.com
+    :return dictionary key:alt text; value: source link"""
     adlt = 'moderate'
     search = query.strip()
     search = search.replace(' ', '+')
@@ -13,20 +16,22 @@ def image_scraper(query):
     headers = {"user-agent": USER_AGENT}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
+    print(soup)
     image_dict = {}
     # finds image links
     images = soup.find_all('a', class_='iusc')
     for i in images:
         try:
             img_url = eval(i['m'])['murl']
+            # parse link to pull out a title
             img_title = img_url.split("/")[-1]
+            img_title = img_title.split(".")[0]
             image_dict[img_title] = img_url
-           # print(img_title,':', img_url)
+            #print(img_title,':', img_url)
         except:
 
             pass
-
-    return json.dumps(image_dict, indent=4)
+    return image_dict
 
 
 
