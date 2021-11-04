@@ -1,15 +1,21 @@
 # sources: https://www.youtube.com/watch?v=stIxEKR7o-c
 # https://github.com/jhnwr/image-downloader/blob/main/imagedownloader.py
+# https://dev.to/swarnimwalavalkar/build-and-deploy-a-rest-api-microservice-with-python-flask-and-docker-5c2d
+
 import requests
 from bs4 import BeautifulSoup
-import json
+import urllib
 
 
-def image_scraper(url):
+def image_scraper(site):
     """scrapes user inputed url for all images on a website and
-    :param http url ex. http://www.cookinglight.com
+    :param http url ex. https://www.cookinglight.com
     :return dictionary key:alt text; value: source link"""
-    response = requests.get(url)
+    search = site.strip()
+    search = search.replace(' ', '+')
+
+    website = 'https://' + search
+    response = requests.get(website)
 
     soup = BeautifulSoup(response.text, 'html.parser')
     img_tags = soup.find_all('img')
@@ -22,11 +28,13 @@ def image_scraper(url):
             images[name] = link
         except:
             pass
-    return json.dumps(images, indent=4)
+    return images
+    #return json.dumps(images, indent=4)
+
 
 
 
 if __name__ == "__main__":
-    url = input("Enter a website formatted with 'http://': ")
+    url = input("Enter a website starting with the www.: ")
     results = image_scraper(url)
     print(results)
