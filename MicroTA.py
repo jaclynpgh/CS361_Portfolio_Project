@@ -172,7 +172,7 @@ class PittMap(tk.Frame):
         label = tk.Label(self, text="Map of Pittsburgh", font=HEADING)
         label.pack(anchor='center')
 
-        self.image = Image.open('map.png')
+        self.image = Image.open('testPhotos/map.png')
         resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
         self.python_image = ImageTk.PhotoImage(resized_image)
 
@@ -270,7 +270,7 @@ class NYMap(tk.Frame):
         label = tk.Label(self, text="Map of New York City", font=HEADING)
         label.pack(anchor='center')
 
-        self.image = Image.open('map.png')
+        self.image = Image.open('testPhotos/map.png')
         resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
         self.python_image = ImageTk.PhotoImage(resized_image)
 
@@ -364,7 +364,7 @@ class ChiMap(tk.Frame):
         label = tk.Label(self, text="Map of Chicago", font=HEADING)
         label.pack(anchor='center')
 
-        self.image = Image.open('map.png')
+        self.image = Image.open('testPhotos/map.png')
         resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
         self.python_image = ImageTk.PhotoImage(resized_image)
 
