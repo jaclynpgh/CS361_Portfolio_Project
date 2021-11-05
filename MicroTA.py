@@ -84,7 +84,7 @@ class Pittsburgh(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(2, "Pittsburgh Wallpaper")
+        image = get_imageAPI(2, "Pittsburgh Skyline")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
@@ -186,7 +186,7 @@ class NewYork(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(1, "New York Wallpaper")
+        image = get_imageAPI(2, "New York Skyline")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
@@ -282,7 +282,7 @@ class Chicago(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(0, "Chicago Wallpaper")
+        image = get_imageAPI(2, "Chicago City Skyline")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
