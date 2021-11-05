@@ -32,7 +32,7 @@ def image_scraper(query):
         except:
 
             pass
-    return jsonify(image_dict)
+    return image_dict
 
 
 

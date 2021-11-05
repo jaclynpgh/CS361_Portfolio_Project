@@ -16,7 +16,7 @@ def home():
 @app.route("/<query>", methods=['GET'])
 def get_image(query):
     data = image_scraper(query)
-    return data
+    return jsonify(data)
 
 
 
