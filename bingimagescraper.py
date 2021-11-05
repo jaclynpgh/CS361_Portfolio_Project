@@ -1,7 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from flask import jsonify
-
 
 def image_scraper(query):
     """scrapes user search term for all images via bing image search

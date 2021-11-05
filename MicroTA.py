@@ -8,11 +8,18 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import *
 from PIL import ImageTk, Image
+from intergrateAPI import get_imageAPI
+from io import BytesIO
+import os
+import requests
+
+
 
 LARGE_FONT = ("Calibri", 15)
 HEADING = ("Calibri", 18, 'bold')
 WIDTH, HEIGHT = 456, 650
 
+imageAPI_url = 'https://jaclynsimagescraper.herokuapp.com/'
 
 
 class MicroTA(tk.Tk):
@@ -75,11 +82,13 @@ class Pittsburgh(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # background image
-        IMAGE_PATH = 'pgh.png'
+        #background image
+        image = get_imageAPI(2, "Pittsburgh Wallpaper")
+        response = requests.get(image)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
 
         # Display image on a Label widget.
-        img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
         lbl = tk.Label(self, image=img)
         lbl.img = img
         lbl.place(relx=0.5, rely=0.5, anchor='center')
@@ -175,11 +184,13 @@ class NewYork(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # background image
-        IMAGE_PATH = 'ny.png'
+        #background image
+        image = get_imageAPI(2, "New York Wallpaper")
+        response = requests.get(image)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
 
         # Display image on a Label widget.
-        img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
         lbl = tk.Label(self, image=img)
         lbl.img = img
         lbl.place(relx=0.5, rely=0.5, anchor='center')
