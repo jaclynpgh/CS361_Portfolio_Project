@@ -2,6 +2,7 @@
 # Date: Fall 2021
 # Course: CS361
 # Sources: www.geeksforgeeks.org/tkinter-application-to-switch-between-different-page-frames/
+# using image urls: https://python-forum.io/thread-12461.html
 
 import tkinter as tk
 from tkinter import *
@@ -82,7 +83,7 @@ class Pittsburgh(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        #background image
+        # background image using my image microservice API
         image = get_imageAPI(2, "Pittsburgh Wallpaper")
         response = requests.get(image)
         img_data = response.content
@@ -184,8 +185,8 @@ class NewYork(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        #background image
-        image = get_imageAPI(2, "New York Wallpaper")
+        # background image using my image microservice API
+        image = get_imageAPI(1, "New York Wallpaper")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
@@ -280,11 +281,11 @@ class Chicago(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # background image
-        IMAGE_PATH = 'chi.png'
-
-        # Display image on a Label widget.
-        img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        # background image using my image microservice API
+        image = get_imageAPI(0, "Chicago Wallpaper")
+        response = requests.get(image)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
         lbl = tk.Label(self, image=img)
         lbl.img = img
         lbl.place(relx=0.5, rely=0.5, anchor='center')
