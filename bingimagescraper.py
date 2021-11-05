@@ -5,7 +5,7 @@ def image_scraper(query):
     """scrapes user search term for all images via bing image search
     :param http url ex. https://www.cookinglight.com
     :return dictionary key:alt text; value: source link"""
-    adlt = 'moderate'
+    adlt = 'safe'
     search = query.strip()
     search = search.replace(' ', '+')
     url = 'https://bing.com/images/search?q=' + search + '&safeSearch=' + adlt
