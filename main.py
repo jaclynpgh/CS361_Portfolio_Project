@@ -8,8 +8,6 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import *
 from PIL import ImageTk, Image
-from bingimagescraper import image_scraper
-
 
 LARGE_FONT = ("Calibri", 15)
 HEADING = ("Calibri", 18, 'bold')
