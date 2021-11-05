@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from flask import jsonify
 
 
 def image_scraper(query):
@@ -31,7 +32,7 @@ def image_scraper(query):
         except:
 
             pass
-    return image_dict
+    return jsonify(image_dict)
 
 
 
