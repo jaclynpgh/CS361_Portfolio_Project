@@ -6,6 +6,6 @@
    - imagescrapper.py Scrapes any website by passing in the website's url. Returns all images on the website.
 
 #### My Travel Application was created using Python and Tkinter.
-#### My Image Scraper API was created in Python with Beautiful Soup and uses Heroku as it's server. 
+#### My Image Scraper API was created in Python with Beautiful Soup and Flask. It uses Heroku as it's server. 
 ##### Access it at https://jaclynsimagescraper.herokuapp.com/
 
