@@ -7,5 +7,9 @@
 
 #### My Travel Application was created using Python and Tkinter.
 #### My Image Scraper API was created in Python with Beautiful Soup and Flask. It uses Heroku as it's server. 
-##### Access it at https://jaclynsimagescraper.herokuapp.com/
+## Image Scraper Usage
+#### Access it at https://jaclynsimagescraper.herokuapp.com/
+#### API Request GET https://jaclynsimagescraper.herokuapp.com/ImageSearchTermHere
+##### For example https://jaclynsimagescraper.herokuapp.com/tomatosouprecipes
+##### Returns { image title : image.jpg }
 
