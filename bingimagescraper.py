@@ -28,7 +28,6 @@ def image_scraper(query):
             image_dict[img_title] = img_url
             #print(img_title,':', img_url)
         except:
-
             pass
     return image_dict
 
