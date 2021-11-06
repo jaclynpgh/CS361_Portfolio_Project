@@ -5,20 +5,20 @@
 # using image urls: https://python-forum.io/thread-12461.html
 
 import tkinter as tk
+from io import BytesIO
 from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import *
-from PIL import ImageTk, Image
-from intergrateAPI import get_imageAPI
-from io import BytesIO
-import os
+from pandastable import Table
+import pandas as pd
 import requests
+from PIL import ImageTk, Image
 
-
+from intergrateAPI import get_imageAPI, get_yelp_info
 
 LARGE_FONT = ("Calibri", 15)
 HEADING = ("Calibri", 18, 'bold')
-WIDTH, HEIGHT = 456, 650
+WIDTH, HEIGHT = 850, 550
 
 imageAPI_url = 'https://jaclynsimagescraper.herokuapp.com/'
 
@@ -29,7 +29,7 @@ class MicroTA(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.winfo_toplevel().title("Micro Travel Agent")
-        self.geometry("455x650+700+200")
+        self.geometry("850x550+400+200")
         self.resizable(0, 0)
 
 
@@ -57,9 +57,13 @@ class MicroTA(tk.Tk):
         frame.tkraise()
 
 
+
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
+
+
 
         IMAGE_PATH = 'MTA.png'
         # Display image on a Label widget.
@@ -72,9 +76,9 @@ class StartPage(tk.Frame):
         b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
         b2 = tk.Button(self, text="New York", height=3, width=10,command=lambda: controller.show_frame(NewYork))
         b3 = tk.Button(self, text="Chicago",height=3, width=10,  command=lambda: controller.show_frame(Chicago))
-        b1.place(rely=0.6, relx=0.2, anchor="center")
-        b2.place(rely=0.6, relx=0.5, anchor="center")
-        b3.place(rely=0.6, relx=0.8, anchor="center")
+        b1.place(rely=0.5, relx=0.2, anchor="center")
+        b2.place(rely=0.5, relx=0.5, anchor="center")
+        b3.place(rely=0.5, relx=0.8, anchor="center")
 
 
 
@@ -98,45 +102,39 @@ class Pittsburgh(tk.Frame):
                          command=lambda: controller.show_frame(StartPage))
         home.grid(row=0, pady=10, padx=5)
 
-        label = tk.Label(self, text="Pittsburgh.\nLet's Plan.", font=HEADING)
-        label.grid(row=1, column = 1, pady=20)
-        style = Style()
+        label = tk.Label(self, text="Pittsburgh. Let's Plan.", font=HEADING)
+        label.grid(row=1, column=5, pady=50, padx=50)
+
         b1 = Button(self, text="Hotels",  command=lambda: controller.show_frame(PittHotels))
         b2 = Button(self, text="Restaurants",  command=lambda: controller.show_frame(PittRestaurants))
-        b3 = Button(self, text="Map", command=lambda: controller.show_frame(PittMap))
-
-        b1.grid(row=2, column=0, ipady=10, ipadx=10, padx=20)
-        b2.grid(row=2, column=1, ipady=10, ipadx=10, padx=20)
-        b3.grid(row=2, column=2, ipady=10, ipadx=10, padx=20)
-
-
-
+        b3 = Button(self, text="Map",  command=lambda: controller.show_frame(PittMap))
+        b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
+        b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
+        b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
 
 class PittRestaurants(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
-
+        # back button
 
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(Pittsburgh))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
 
-
+        # label
         label = tk.Label(self, text="Pittsburgh. Let's Eat.\n", font=HEADING)
         label.pack()
 
-        scrollbar = Scrollbar(self)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        listbox = Listbox(self)
-        listbox.config(width=40, height=200)
-        listbox.pack(fill=Y)
-        file = open('restaurants.txt', 'r').readlines()
-        for i in file:
-            listbox.insert(END, i)
-        listbox.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=listbox.yview)
+
+        # Sam's Yelp microservice
+        restaurant_data = get_yelp_info("Pittsburgh", "PA")
+        # format into table using pandas
+        df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
+        frame = tk.Frame(self)
+        frame.pack(fill='both', expand=True)
+        pt = Table(frame, dataframe=df)
+        pt.show()
 
 
 class PittHotels(tk.Frame):
@@ -200,42 +198,37 @@ class NewYork(tk.Frame):
                          command=lambda: controller.show_frame(StartPage))
         home.grid(row=0, pady=10, padx=5)
 
-        label = tk.Label(self, text="New York.\nLet's Plan.", font=HEADING)
-        label.grid(row=1, column=1, pady=20)
+        label = tk.Label(self, text="New York. Let's Plan.", font=HEADING)
+        label.grid(row=1, column=5, pady=50, padx=50)
         style = Style()
         b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(NYHotels))
         b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(NYRestaurants))
         b3 = Button(self, text="Map", command=lambda: controller.show_frame(NYMap))
+        b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
+        b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
+        b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
 
-        b1.grid(row=2, column=0, ipady=10, ipadx=10, padx=20)
-        b2.grid(row=2, column=1, ipady=10, ipadx=10, padx=20)
-        b3.grid(row=2, column=2, ipady=10, ipadx=10, padx=20)
 
 class NYRestaurants(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-
-
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(NewYork))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
 
-
         label = tk.Label(self, text="New York City. Let's Eat.\n", font=HEADING)
         label.pack()
 
-        scrollbar = Scrollbar(self)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        listbox = Listbox(self)
-        listbox.config(width=40, height=200)
-        listbox.pack(fill=Y)
-        file = open('restaurants.txt', 'r').readlines()
-        for i in file:
-            listbox.insert(END, i)
-        listbox.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=listbox.yview)
+        # Sam's Yelp microservice
+        restaurant_data = get_yelp_info("New York City", "NY")
+        # format into table using pandas
+        df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
+        frame = tk.Frame(self)
+        frame.pack(fill='both', expand=True)
+        pt = Table(frame, dataframe=df)
+        pt.show()
 
 class NYHotels(tk.Frame):
 
@@ -294,16 +287,16 @@ class Chicago(tk.Frame):
                          command=lambda: controller.show_frame(StartPage))
         home.grid(row=0, pady=10, padx=5)
 
-        label = tk.Label(self, text="Chicago.\nLet's Plan.", font=HEADING)
-        label.grid(row=1, column=1, pady=20)
+        label = tk.Label(self, text="Chicago. Let's Plan.", font=HEADING)
+        label.grid(row=1, column=5, pady=50, padx=50)
         style = Style()
         b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(ChiHotels))
         b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(ChiRestaurants))
         b3 = Button(self, text="Map", command=lambda: controller.show_frame(ChiMap))
+        b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
+        b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
+        b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
 
-        b1.grid(row=2, column=0, ipady=10, ipadx=10, padx=20)
-        b2.grid(row=2, column=1, ipady=10, ipadx=10, padx=20)
-        b3.grid(row=2, column=2, ipady=10, ipadx=10, padx=20)
 
 class ChiRestaurants(tk.Frame):
 
@@ -320,16 +313,14 @@ class ChiRestaurants(tk.Frame):
         label = tk.Label(self, text="Chicago. Let's Eat.\n", font=HEADING)
         label.pack()
 
-        scrollbar = Scrollbar(self)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        listbox = Listbox(self)
-        listbox.config(width=40, height=200)
-        listbox.pack(fill=Y)
-        file = open('restaurants.txt', 'r').readlines()
-        for i in file:
-            listbox.insert(END, i)
-        listbox.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=listbox.yview)
+        # Sam's Yelp microservice
+        restaurant_data = get_yelp_info("Chicago", "IL")
+        # format into table using pandas
+        df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
+        frame = tk.Frame(self)
+        frame.pack(fill='both', expand=True)
+        pt = Table(frame, dataframe=df)
+        pt.show()
 
 class ChiHotels(tk.Frame):
 
@@ -369,6 +360,7 @@ class ChiMap(tk.Frame):
         self.python_image = ImageTk.PhotoImage(resized_image)
 
         ttk.Label(self, image=self.python_image).pack(fill=Y)
+
 
 
 
