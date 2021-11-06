@@ -26,7 +26,7 @@ def get_imageAPI(index, query):
 
 
 def get_yelp_info(city, state):
-    imageAPI_url = 'http://192.168.0.109:3000/'
+    imageAPI_url = 'https://yelp-sc.herokuapp.com/'
     try:
         response = requests.get(imageAPI_url + city + state)
         response.raise_for_status()
