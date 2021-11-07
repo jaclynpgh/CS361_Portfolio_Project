@@ -3,6 +3,7 @@
 # Course: CS361
 # Sources: www.geeksforgeeks.org/tkinter-application-to-switch-between-different-page-frames/
 # using image urls: https://python-forum.io/thread-12461.html
+# Pandas: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sort_values.html#pandas.DataFrame.sort_values
 
 import tkinter as tk
 from io import BytesIO
@@ -27,11 +28,10 @@ class MicroTA(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
+        # create window frame
         self.winfo_toplevel().title("Micro Travel Agent")
-        self.geometry("850x550+400+200")
+        self.geometry("850x550+300+150")
         self.resizable(0, 0)
-
 
         container = tk.Frame(self)
         container.place(relx=0.5, rely=0.5, anchor='center')
@@ -39,47 +39,37 @@ class MicroTA(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-
         self.frames = {}
-
+        # iterates through UI as user navigates
         for F in (StartPage, Pittsburgh, NewYork, Chicago, PittHotels, PittRestaurants, PittMap, NYHotels,
                   NYRestaurants, NYMap, ChiHotels, ChiRestaurants, ChiMap):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-
-
         self.show_frame(StartPage)
-
 
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
 
-
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
-
-
-
+        # stock image created via Canva
         IMAGE_PATH = 'MTA.png'
         # Display image on a Label widget.
         img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
         lbl = tk.Label(self, image=img)
-        lbl.img = img  # Keep a reference in case this code put is in a function.
+        lbl.img = img
         lbl.place(relx=0.5, rely=0.5, anchor='center')
-
-
+        # Display buttons
         b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
-        b2 = tk.Button(self, text="New York", height=3, width=10,command=lambda: controller.show_frame(NewYork))
-        b3 = tk.Button(self, text="Chicago",height=3, width=10,  command=lambda: controller.show_frame(Chicago))
+        b2 = tk.Button(self, text="New York", height=3, width=10, command=lambda: controller.show_frame(NewYork))
+        b3 = tk.Button(self, text="Chicago", height=3, width=10, command=lambda: controller.show_frame(Chicago))
         b1.place(rely=0.5, relx=0.2, anchor="center")
         b2.place(rely=0.5, relx=0.5, anchor="center")
         b3.place(rely=0.5, relx=0.8, anchor="center")
-
 
 
 class Pittsburgh(tk.Frame):
@@ -98,52 +88,51 @@ class Pittsburgh(tk.Frame):
         lbl.img = img
         lbl.place(relx=0.5, rely=0.5, anchor='center')
 
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(StartPage))
+        # back button
+        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(StartPage))
         home.grid(row=0, pady=10, padx=5)
-
+        # title label
         label = tk.Label(self, text="Pittsburgh. Let's Plan.", font=HEADING)
         label.grid(row=1, column=5, pady=50, padx=50)
-
-        b1 = Button(self, text="Hotels",  command=lambda: controller.show_frame(PittHotels))
-        b2 = Button(self, text="Restaurants",  command=lambda: controller.show_frame(PittRestaurants))
-        b3 = Button(self, text="Map",  command=lambda: controller.show_frame(PittMap))
+        # display buttons
+        b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(PittHotels))
+        b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(PittRestaurants))
+        b3 = Button(self, text="Map", command=lambda: controller.show_frame(PittMap))
         b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
         b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
         b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
+
 
 class PittRestaurants(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # back button
-
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(Pittsburgh))
+        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Pittsburgh))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
+        self.configure(background='black')
 
         # label
-        label = tk.Label(self, text="Pittsburgh. Let's Eat.\n", font=HEADING)
+        label = tk.Label(self, text="Pittsburgh. Let's Eat.\n", font=HEADING, bg="black", fg="white")
         label.pack()
-
 
         # Sam's Yelp microservice
         restaurant_data = get_yelp_info("Pittsburgh", "PA")
-        # format into table using pandas
+        # format into table using pandas dataframe
         df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
         frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True)
+        frame.pack(fill='both', expand=True, pady=50)
         pt = Table(frame, dataframe=df)
         pt.show()
+
 
 
 class PittHotels(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(Pittsburgh))
+        # back button
+        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Pittsburgh))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
 
         label = tk.Label(self, text="Pittsburgh. Stay Awhile.\n", font=HEADING)
@@ -160,12 +149,12 @@ class PittHotels(tk.Frame):
         listbox.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=listbox.yview)
 
+
 class PittMap(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(Pittsburgh))
+        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Pittsburgh))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
         label = tk.Label(self, text="Map of Pittsburgh", font=HEADING)
         label.pack(anchor='center')
@@ -175,7 +164,6 @@ class PittMap(tk.Frame):
         self.python_image = ImageTk.PhotoImage(resized_image)
 
         ttk.Label(self, image=self.python_image).pack(fill=Y)
-
 
 
 class NewYork(tk.Frame):
@@ -217,8 +205,8 @@ class NYRestaurants(tk.Frame):
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(NewYork))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-
-        label = tk.Label(self, text="New York City. Let's Eat.\n", font=HEADING)
+        self.configure(background="black")
+        label = tk.Label(self, text="New York City. Let's Eat.\n", font=HEADING, bg="black", fg="white")
         label.pack()
 
         # Sam's Yelp microservice
@@ -226,9 +214,10 @@ class NYRestaurants(tk.Frame):
         # format into table using pandas
         df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
         frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True)
+        frame.pack(fill='both', expand=True, pady=50)
         pt = Table(frame, dataframe=df)
         pt.show()
+
 
 class NYHotels(tk.Frame):
 
@@ -253,6 +242,7 @@ class NYHotels(tk.Frame):
         listbox.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=listbox.yview)
 
+
 class NYMap(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -268,6 +258,7 @@ class NYMap(tk.Frame):
         self.python_image = ImageTk.PhotoImage(resized_image)
 
         ttk.Label(self, image=self.python_image).pack(fill=Y)
+
 
 class Chicago(tk.Frame):
 
@@ -303,14 +294,11 @@ class ChiRestaurants(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-
-
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(Chicago))
         home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-
-
-        label = tk.Label(self, text="Chicago. Let's Eat.\n", font=HEADING)
+        self.configure(background= "black")
+        label = tk.Label(self, text="Chicago. Let's Eat.\n", font=HEADING, bg="black", fg="white")
         label.pack()
 
         # Sam's Yelp microservice
@@ -318,9 +306,10 @@ class ChiRestaurants(tk.Frame):
         # format into table using pandas
         df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
         frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True)
+        frame.pack(fill='both', expand=True, pady=50)
         pt = Table(frame, dataframe=df)
         pt.show()
+
 
 class ChiHotels(tk.Frame):
 
@@ -345,6 +334,7 @@ class ChiHotels(tk.Frame):
         listbox.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=listbox.yview)
 
+
 class ChiMap(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -360,8 +350,6 @@ class ChiMap(tk.Frame):
         self.python_image = ImageTk.PhotoImage(resized_image)
 
         ttk.Label(self, image=self.python_image).pack(fill=Y)
-
-
 
 
 app = MicroTA()
