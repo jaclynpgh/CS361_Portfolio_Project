@@ -15,7 +15,6 @@ def image_scraper(query):
     headers = {"user-agent": USER_AGENT}
     resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.content, "html.parser")
-    print(soup)
     image_dict = {}
     # finds image links
     images = soup.find_all('a', class_='iusc')
