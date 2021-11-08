@@ -22,16 +22,15 @@ def image_scraper(query):
     for i in images:
         try:
             img_url = eval(i['m'])['murl']
-            # parse link to pull out a title
-            img_title = img_url.split("/")[-1]
-            img_title = img_title.split(".")[0]
+            # get title
+            img_title = eval(i['m'])['t']
+            #img_title = img_url.split("/")[-1]
+            #img_title = img_title.split(".")[0]
             image_dict[img_title] = img_url
             #print(img_title,':', img_url)
         except:
             pass
     return image_dict
-
-
 
 
 if __name__ == "__main__":
