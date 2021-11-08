@@ -23,7 +23,7 @@ def image_scraper(query):
         try:
             img_url = eval(i['m'])['murl']
             # get title
-            img_title = eval(i['m'])['t']
+            img_title = eval(i['m'])['desc']
             #img_title = img_url.split("/")[-1]
             #img_title = img_title.split(".")[0]
             image_dict[img_title] = img_url
