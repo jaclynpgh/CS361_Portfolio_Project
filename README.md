@@ -15,5 +15,5 @@
 ##  Website Image Scraper Usage
 #### View Repository for image scraper and heroku deployment at https://github.com/jaclynpgh/imagescraper
 #### API Request GET https://websiteimagescraper.herokuapp.com/AddWebsiteToScrapeHere
-##### For example https://jaclynsimagescraper.herokuapp.com/https://www.cookinglight.com/recipes/vegetarian-green-curry-stew
+##### For example https://websiteimagescraper.herokuapp.com/https://www.cookinglight.com/recipes/vegetarian-green-curry-stew
 ##### Returns { image title : image.jpg }
