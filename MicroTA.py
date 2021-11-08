@@ -18,10 +18,8 @@ from PIL import ImageTk, Image
 from intergrateAPI import get_imageAPI, get_yelp_info
 
 LARGE_FONT = ("Calibri", 15)
-HEADING = ("Calibri", 18, 'bold')
+HEADING = ("Calibri", 20, 'bold')
 WIDTH, HEIGHT = 850, 550
-
-imageAPI_url = 'https://jaclynsimagescraper.herokuapp.com/'
 
 
 class MicroTA(tk.Tk):
@@ -57,9 +55,9 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # stock image created via Canva
-        IMAGE_PATH = 'MTA.png'
+        image_path = 'MTA.png'
         # Display image on a Label widget.
-        img = ImageTk.PhotoImage(Image.open(IMAGE_PATH).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
         lbl = tk.Label(self, image=img)
         lbl.img = img
         lbl.place(relx=0.5, rely=0.5, anchor='center')
@@ -94,49 +92,32 @@ class Pittsburgh(tk.Frame):
         # title label
         label = tk.Label(self, text="Pittsburgh. Let's Plan.", font=HEADING)
         label.grid(row=1, column=5, pady=50, padx=50)
-        # display buttons
-        b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(PittHotels))
-        b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(PittRestaurants))
-        b3 = Button(self, text="Map", command=lambda: controller.show_frame(PittMap))
-        b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
-        b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
-        b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
+
+        # styling and frame destination for buttons
+        city_button_style(self, controller, PittHotels, PittRestaurants, PittMap)
 
 
 class PittRestaurants(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        # back button
-        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Pittsburgh))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
+
+        # add back button and label
+        display_back_button_and_title(self, controller, "Pittsburgh. Let's Eat.", Pittsburgh)
+
         self.configure(background='black')
 
-        # label
-        label = tk.Label(self, text="Pittsburgh. Let's Eat.\n", font=HEADING, bg="black", fg="white")
-        label.pack()
-
-        # Sam's Yelp microservice
-        restaurant_data = get_yelp_info("Pittsburgh", "PA")
-        # format into table using pandas dataframe
-        df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
-        frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True, pady=50)
-        pt = Table(frame, dataframe=df)
-        pt.show()
-
+        # display data from Sam's Yelp microservice
+        display_yelp_data(self, "Pittsburgh", "PA")
 
 
 class PittHotels(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        # back button
-        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Pittsburgh))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
 
-        label = tk.Label(self, text="Pittsburgh. Stay Awhile.\n", font=HEADING)
-        label.pack(anchor='center')
+        # add back button and label
+        display_back_button_and_title(self, controller, "Pittsburgh. Stay Awhile.", Pittsburgh)
 
         scrollbar = Scrollbar(self)
         scrollbar.pack(side=RIGHT, fill=Y)
@@ -154,10 +135,9 @@ class PittMap(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(Pittsburgh))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-        label = tk.Label(self, text="Map of Pittsburgh", font=HEADING)
-        label.pack(anchor='center')
+
+        # add back button and label
+        display_back_button_and_title(self, controller, "Map of Pittsburgh", Pittsburgh)
 
         self.image = Image.open('testPhotos/map.png')
         resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
@@ -188,13 +168,8 @@ class NewYork(tk.Frame):
 
         label = tk.Label(self, text="New York. Let's Plan.", font=HEADING)
         label.grid(row=1, column=5, pady=50, padx=50)
-        style = Style()
-        b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(NYHotels))
-        b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(NYRestaurants))
-        b3 = Button(self, text="Map", command=lambda: controller.show_frame(NYMap))
-        b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
-        b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
-        b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
+        # styling and frame destination for buttons
+        city_button_style(self, controller, NYHotels, NYRestaurants, NYMap)
 
 
 class NYRestaurants(tk.Frame):
@@ -202,21 +177,13 @@ class NYRestaurants(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(NewYork))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-        self.configure(background="black")
-        label = tk.Label(self, text="New York City. Let's Eat.\n", font=HEADING, bg="black", fg="white")
-        label.pack()
+        self.configure(background='black')
 
-        # Sam's Yelp microservice
-        restaurant_data = get_yelp_info("New York City", "NY")
-        # format into table using pandas
-        df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
-        frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True, pady=50)
-        pt = Table(frame, dataframe=df)
-        pt.show()
+        # add back button and label
+        display_back_button_and_title(self, controller, "New York City. Let's Eat.", NewYork)
+
+        # display data from Sam's Yelp microservice
+        display_yelp_data(self, "New York", "NY")
 
 
 class NYHotels(tk.Frame):
@@ -224,12 +191,8 @@ class NYHotels(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(NewYork))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-
-        label = tk.Label(self, text="New York City. Stay Awhile.\n", font=HEADING)
-        label.pack(anchor='center')
+        # add back button and label
+        display_back_button_and_title(self, controller, "New York City. Stay Awhile.", NewYork)
 
         scrollbar = Scrollbar(self)
         scrollbar.pack(side=RIGHT, fill=Y)
@@ -247,11 +210,9 @@ class NYMap(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(NewYork))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-        label = tk.Label(self, text="Map of New York City", font=HEADING)
-        label.pack(anchor='center')
+
+        # add back button and label
+        display_back_button_and_title(self, controller, "Map of New York", NewYork)
 
         self.image = Image.open('testPhotos/map.png')
         resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
@@ -280,13 +241,9 @@ class Chicago(tk.Frame):
 
         label = tk.Label(self, text="Chicago. Let's Plan.", font=HEADING)
         label.grid(row=1, column=5, pady=50, padx=50)
-        style = Style()
-        b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(ChiHotels))
-        b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(ChiRestaurants))
-        b3 = Button(self, text="Map", command=lambda: controller.show_frame(ChiMap))
-        b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
-        b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
-        b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
+
+        # styling and frame destination for buttons
+        city_button_style(self, controller, ChiHotels, ChiRestaurants, ChiMap)
 
 
 class ChiRestaurants(tk.Frame):
@@ -294,21 +251,13 @@ class ChiRestaurants(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(Chicago))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-        self.configure(background= "black")
-        label = tk.Label(self, text="Chicago. Let's Eat.\n", font=HEADING, bg="black", fg="white")
-        label.pack()
+        self.configure(background='black')
 
-        # Sam's Yelp microservice
-        restaurant_data = get_yelp_info("Chicago", "IL")
-        # format into table using pandas
-        df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
-        frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True, pady=50)
-        pt = Table(frame, dataframe=df)
-        pt.show()
+        # add back button and label
+        display_back_button_and_title(self, controller, "Chicago. Let's Eat.", Chicago)
+
+        # display data from Sam's Yelp microservice
+        display_yelp_data(self, "Chicago", "IL")
 
 
 class ChiHotels(tk.Frame):
@@ -316,12 +265,8 @@ class ChiHotels(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(Chicago))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-
-        label = tk.Label(self, text="Chicago. Stay Awhile.\n", font=HEADING)
-        label.pack(anchor='center')
+        # add back button and label
+        display_back_button_and_title(self, controller, "Chicago. Stay Awhile.", Chicago)
 
         scrollbar = Scrollbar(self)
         scrollbar.pack(side=RIGHT, fill=Y)
@@ -339,17 +284,49 @@ class ChiMap(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(Chicago))
-        home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-        label = tk.Label(self, text="Map of Chicago", font=HEADING)
-        label.pack(anchor='center')
+
+        # add back button and label
+        display_back_button_and_title(self, controller, "Map of Chicago", Chicago)
 
         self.image = Image.open('testPhotos/map.png')
         resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
         self.python_image = ImageTk.PhotoImage(resized_image)
 
         ttk.Label(self, image=self.python_image).pack(fill=Y)
+
+
+def display_yelp_data(instance, city, state):
+    """gets restaurant data from Sam's Yelp microservice and displays it in a table"""
+    restaurant_data = get_yelp_info(city, state)
+    df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
+    frame = tk.Frame(instance)
+    frame.pack(fill='both', expand=True, pady=50)
+    pt = Table(frame, dataframe=df)
+    pt.show()
+
+
+def display_back_button_and_title(instance, controller, text_title, frame_destination):
+    """ displays back button and title label
+       :param instance: declare an instance of the class such as self
+       :param controller: class controller
+       :param text_title: title text to put on label
+       :param frame_destination: class destination when back button is pushed"""
+    # back button
+    home = tk.Button(instance, text="Back", height=1, width=10,
+                     command=lambda: controller.show_frame(frame_destination))
+    home.pack(side=TOP, pady=5, padx=3, anchor=NW)
+    # label
+    label = tk.Label(instance, text=text_title, font=HEADING, bg="black", fg="white")
+    label.pack(anchor='center')
+
+
+def city_button_style(instance, controller, frame_dest1, framedest2, framedest3):
+    b1 = Button(instance, text="Hotels", command=lambda: controller.show_frame(frame_dest1))
+    b2 = Button(instance, text="Restaurants", command=lambda: controller.show_frame(framedest2))
+    b3 = Button(instance, text="Map", command=lambda: controller.show_frame(framedest3))
+    b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
+    b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
+    b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
 
 
 app = MicroTA()
