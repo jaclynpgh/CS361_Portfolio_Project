@@ -15,10 +15,11 @@ import pandas as pd
 import requests
 from PIL import ImageTk, Image
 
-from intergrateAPI import get_imageAPI, get_yelp_info
+from intergrateAPI import get_imageAPI, get_yelp_info, get_weather
 
 LARGE_FONT = ("Calibri", 15)
-HEADING = ("Calibri", 20, 'bold')
+HEADING = ("Calibri", 24, 'bold')
+SUBTITLE = ("Calibri", 20, 'bold')
 WIDTH, HEIGHT = 850, 550
 
 
@@ -39,8 +40,8 @@ class MicroTA(tk.Tk):
 
         self.frames = {}
         # iterates through UI as user navigates
-        for F in (StartPage, Pittsburgh, NewYork, Chicago, PittHotels, PittRestaurants, PittMap, NYHotels,
-                  NYRestaurants, NYMap, ChiHotels, ChiRestaurants, ChiMap):
+        for F in (StartPage, Pittsburgh, NewYork, Chicago, PittHotels, PittRestaurants, PittWeather, NYHotels,
+                  NYRestaurants, NYWeather, ChiHotels, ChiRestaurants, ChiWeather):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -76,7 +77,7 @@ class Pittsburgh(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(2, "Pittsburgh Skyline")
+        image = get_imageAPI(2, "Pittsburgh")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
@@ -94,7 +95,7 @@ class Pittsburgh(tk.Frame):
         label.grid(row=1, column=5, pady=50, padx=50)
 
         # styling and frame destination for buttons
-        city_button_style(self, controller, PittHotels, PittRestaurants, PittMap)
+        city_button_style(self, controller, PittHotels, PittRestaurants, PittWeather)
 
 
 class PittRestaurants(tk.Frame):
@@ -131,20 +132,44 @@ class PittHotels(tk.Frame):
         scrollbar.config(command=listbox.yview)
 
 
-class PittMap(tk.Frame):
+class PittWeather(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        # Bailey's weather microservice
+        # weather_data = [forecast, current, temp_f]
+        weather = get_weather("Pittsburgh")
+
+        forecast = weather[0]
+        current = weather[1]
+        temp = weather[2], "F"
+
+        # background image using my image microservice API
+        image = get_imageAPI(0, current)
+        response = requests.get(image)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+
+        # Display image on a Label widget.
+        lbl = tk.Label(self, image=img)
+        lbl.img = img
+        lbl.place(relx=0.5, rely=0.5, anchor='center')
+
         # add back button and label
-        display_back_button_and_title(self, controller, "Map of Pittsburgh", Pittsburgh)
-
-        self.image = Image.open('testPhotos/map.png')
-        resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
-        self.python_image = ImageTk.PhotoImage(resized_image)
-
-        ttk.Label(self, image=self.python_image).pack(fill=Y)
-
+        display_back_button_and_title(self, controller, "Pittsburgh Weather", Pittsburgh)
+        label1 = tk.Label(self, text="Forecast:", font=HEADING)
+        label1.pack(anchor='center', pady=10)
+        label1 = tk.Label(self, text=forecast, font=SUBTITLE)
+        label1.pack(anchor='center', pady=10)
+        label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
+        label2.pack(anchor='center', pady=10)
+        label2 = tk.Label(self, text=current, font=SUBTITLE)
+        label2.pack(anchor='center', pady=10)
+        label3 = tk.Label(self, text="Temperature:", font=HEADING)
+        label3.pack(anchor='center', pady=10)
+        label3 = tk.Label(self, text=temp, font=SUBTITLE)
+        label3.pack(anchor='center', pady=10)
 
 class NewYork(tk.Frame):
 
@@ -152,7 +177,7 @@ class NewYork(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(2, "New York Skyline")
+        image = get_imageAPI(0, "New York Skyline")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
@@ -169,7 +194,7 @@ class NewYork(tk.Frame):
         label = tk.Label(self, text="New York. Let's Plan.", font=HEADING)
         label.grid(row=1, column=5, pady=50, padx=50)
         # styling and frame destination for buttons
-        city_button_style(self, controller, NYHotels, NYRestaurants, NYMap)
+        city_button_style(self, controller, NYHotels, NYRestaurants, NYWeather)
 
 
 class NYRestaurants(tk.Frame):
@@ -206,19 +231,44 @@ class NYHotels(tk.Frame):
         scrollbar.config(command=listbox.yview)
 
 
-class NYMap(tk.Frame):
+class NYWeather(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        # Bailey's weather microservice
+        # weather_data = [forecast, current, temp_f]
+        weather = get_weather("New York City")
+
+        forecast = weather[0]
+        current = weather[1]
+        temp = weather[2], "F"
+
+        # background image using my image microservice API
+        image = get_imageAPI(0, current)
+        response = requests.get(image)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+
+        # Display image on a Label widget.
+        lbl = tk.Label(self, image=img)
+        lbl.img = img
+        lbl.place(relx=0.5, rely=0.5, anchor='center')
+
         # add back button and label
-        display_back_button_and_title(self, controller, "Map of New York", NewYork)
-
-        self.image = Image.open('testPhotos/map.png')
-        resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
-        self.python_image = ImageTk.PhotoImage(resized_image)
-
-        ttk.Label(self, image=self.python_image).pack(fill=Y)
+        display_back_button_and_title(self, controller, "New York City Weather", NewYork)
+        label1 = tk.Label(self, text="Forecast:", font=HEADING)
+        label1.pack(anchor='center', pady=10)
+        label1 = tk.Label(self, text=forecast, font=SUBTITLE)
+        label1.pack(anchor='center', pady=10)
+        label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
+        label2.pack(anchor='center', pady=10)
+        label2 = tk.Label(self, text=current, font=SUBTITLE)
+        label2.pack(anchor='center', pady=10)
+        label3 = tk.Label(self, text="Temperature:", font=HEADING)
+        label3.pack(anchor='center', pady=10)
+        label3 = tk.Label(self, text=temp, font=SUBTITLE)
+        label3.pack(anchor='center', pady=10)
 
 
 class Chicago(tk.Frame):
@@ -227,7 +277,7 @@ class Chicago(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(2, "Chicago City Skyline")
+        image = get_imageAPI(0, "Chicago")
         response = requests.get(image)
         img_data = response.content
         img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
@@ -243,7 +293,7 @@ class Chicago(tk.Frame):
         label.grid(row=1, column=5, pady=50, padx=50)
 
         # styling and frame destination for buttons
-        city_button_style(self, controller, ChiHotels, ChiRestaurants, ChiMap)
+        city_button_style(self, controller, ChiHotels, ChiRestaurants, ChiWeather)
 
 
 class ChiRestaurants(tk.Frame):
@@ -280,19 +330,44 @@ class ChiHotels(tk.Frame):
         scrollbar.config(command=listbox.yview)
 
 
-class ChiMap(tk.Frame):
+class ChiWeather(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        # Bailey's weather microservice
+        # weather_data = [forecast, current, temp_f]
+        weather = get_weather("Chicago")
+
+        forecast = weather[0]
+        current = weather[1]
+        temp = weather[2], "F"
+
+        # background image using my image microservice API
+        image = get_imageAPI(0, current)
+        response = requests.get(image)
+        img_data = response.content
+        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+
+        # Display image on a Label widget.
+        lbl = tk.Label(self, image=img)
+        lbl.img = img
+        lbl.place(relx=0.5, rely=0.5, anchor='center')
+
         # add back button and label
-        display_back_button_and_title(self, controller, "Map of Chicago", Chicago)
-
-        self.image = Image.open('testPhotos/map.png')
-        resized_image = self.image.resize((400, 305), Image.ANTIALIAS)
-        self.python_image = ImageTk.PhotoImage(resized_image)
-
-        ttk.Label(self, image=self.python_image).pack(fill=Y)
+        display_back_button_and_title(self, controller, "Chicago Weather", Chicago)
+        label1 = tk.Label(self, text="Forecast:", font=HEADING)
+        label1.pack(anchor='center', pady=10)
+        label1 = tk.Label(self, text=forecast, font=SUBTITLE)
+        label1.pack(anchor='center', pady=10)
+        label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
+        label2.pack(anchor='center', pady=10)
+        label2 = tk.Label(self, text=current, font=SUBTITLE)
+        label2.pack(anchor='center', pady=10)
+        label3 = tk.Label(self, text="Temperature:", font=HEADING)
+        label3.pack(anchor='center', pady=10)
+        label3 = tk.Label(self, text=temp, font=SUBTITLE)
+        label3.pack(anchor='center', pady=10)
 
 
 def display_yelp_data(instance, city, state):
@@ -317,13 +392,13 @@ def display_back_button_and_title(instance, controller, text_title, frame_destin
     home.pack(side=TOP, pady=5, padx=3, anchor=NW)
     # label
     label = tk.Label(instance, text=text_title, font=HEADING, bg="black", fg="white")
-    label.pack(anchor='center')
+    label.pack(anchor='center', pady=20)
 
 
 def city_button_style(instance, controller, frame_dest1, framedest2, framedest3):
     b1 = Button(instance, text="Hotels", command=lambda: controller.show_frame(frame_dest1))
     b2 = Button(instance, text="Restaurants", command=lambda: controller.show_frame(framedest2))
-    b3 = Button(instance, text="Map", command=lambda: controller.show_frame(framedest3))
+    b3 = Button(instance, text="Weather", command=lambda: controller.show_frame(framedest3))
     b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
     b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
     b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)

@@ -26,6 +26,7 @@ def get_imageAPI(index, query):
 
 
 def get_yelp_info(city, state):
+    """Sam's microservice to return Yelp restaurant infor"""
     imageAPI_url = 'https://yelp-sc.herokuapp.com/'
     try:
         response = requests.get(imageAPI_url + city + state)
@@ -41,6 +42,26 @@ def get_yelp_info(city, state):
     except Exception as err:
         print(f'Other error occurred: {err}')
 
+def get_weather(city):
+    """Bailey's microservice to return weather data"""
+    weather_url = 'http://flip1.engr.oregonstate.edu:5454/?city='
+    try:
+        response = requests.get(weather_url + city)
+        response.raise_for_status()
+        # access JSON content
+        jsonResponse = response.json()
+        # parse data from json
+        forecast = jsonResponse['weather'][0]['main']
+        current = jsonResponse['weather'][0]['description']
+        temp_k = jsonResponse['main']['temp']
+        temp_f = (temp_k - 273.15) * 9//5 + 32
+        weather_data = [forecast, current, temp_f]
+
+        return weather_data
 
 
+    except HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
+    except Exception as err:
+        print(f'Other error occurred: {err}')
 
