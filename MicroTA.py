@@ -8,7 +8,6 @@
 import tkinter as tk
 from io import BytesIO
 from tkinter import *
-from tkinter import ttk
 from tkinter.ttk import *
 from pandastable import Table
 import pandas as pd
