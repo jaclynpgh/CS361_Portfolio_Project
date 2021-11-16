@@ -17,12 +17,9 @@ def get_hotel_data(query):
 		jsonResponse = response.json()
 		# grabs hotel info
 		result = jsonResponse['results']
-		hotel_data = {}
+		hotel_data = []
 		for i in range(len(result)):
-			name = result[i]['name']
-			rating = result[i]['rating']
-			hotel_data[name] = rating
-
+			hotel_data.append([result[i]['name'], result[i]['rating'], result[i]['formatted_address']])
 		return hotel_data
 
 

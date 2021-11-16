@@ -13,8 +13,8 @@ from pandastable import Table
 import pandas as pd
 import requests
 from PIL import ImageTk, Image
-
 from intergrateAPI import get_imageAPI, get_yelp_info, get_weather
+from hoteldata import get_hotel_data
 
 LARGE_FONT = ("Calibri", 15)
 HEADING = ("Calibri", 24, 'bold')
@@ -75,16 +75,19 @@ class Pittsburgh(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # background image using my image microservice API
-        image = get_imageAPI(2, "Pittsburgh")
-        response = requests.get(image)
-        img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        try:
+            # background image using my image microservice API
+            image = get_imageAPI(1, "Pittsburgh")
+            response = requests.get(image)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
 
-        # Display image on a Label widget.
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+            # Display image on a Label widget.
+            lbl = tk.Label(self, image=img)
+            lbl.img = img
+            lbl.place(relx=0.5, rely=0.5, anchor='center')
+        finally:
+            self.configure(background="black")
 
         # back button
         home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(StartPage))
@@ -118,17 +121,14 @@ class PittHotels(tk.Frame):
 
         # add back button and label
         display_back_button_and_title(self, controller, "Pittsburgh. Stay Awhile.", Pittsburgh)
+        self.configure(background='black')
 
-        scrollbar = Scrollbar(self)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        listbox = Listbox(self)
-        listbox.config(width=40, height=200)
-        listbox.pack(fill=Y)
-        file = open('hotels.txt', 'r').readlines()
-        for i in file:
-            listbox.insert(END, i)
-        listbox.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=listbox.yview)
+        hotel_data = get_hotel_data("Pittsburgh Hotels")
+        df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
+        frame = tk.Frame(self)
+        frame.pack(fill='both', expand=True, pady=20, padx=10)
+        pt = Table(frame, dataframe=df)
+        pt.show()
 
 
 class PittWeather(tk.Frame):
@@ -143,17 +143,20 @@ class PittWeather(tk.Frame):
         forecast = weather[0]
         current = weather[1]
         temp = weather[2], "F"
+            # error protection, if no photo find, set background
+        try:
 
-        # background image using my image microservice API
-        image = get_imageAPI(0, current)
-        response = requests.get(image)
-        img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-
-        # Display image on a Label widget.
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+            # background image using my image microservice API
+            image = get_imageAPI(4, current)
+            response = requests.get(image)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+            # Display image on a Label widget.
+            lbl = tk.Label(self, image=img)
+            lbl.img = img
+            lbl.place(relx=0.5, rely=0.5, anchor='center')
+        finally:
+            self.configure(background='blue')
 
         # add back button and label
         display_back_button_and_title(self, controller, "Pittsburgh Weather", Pittsburgh)
@@ -170,21 +173,25 @@ class PittWeather(tk.Frame):
         label3 = tk.Label(self, text=temp, font=SUBTITLE)
         label3.pack(anchor='center', pady=10)
 
+
 class NewYork(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(0, "New York Skyline")
-        response = requests.get(image)
-        img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        try:
+            image = get_imageAPI(1, "New York Skyline")
+            response = requests.get(image)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
 
-        # Display image on a Label widget.
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+            # Display image on a Label widget.
+            lbl = tk.Label(self, image=img)
+            lbl.img = img
+            lbl.place(relx=0.5, rely=0.5, anchor='center')
+        finally:
+            self.configure(background="black")
 
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(StartPage))
@@ -218,16 +225,14 @@ class NYHotels(tk.Frame):
         # add back button and label
         display_back_button_and_title(self, controller, "New York City. Stay Awhile.", NewYork)
 
-        scrollbar = Scrollbar(self)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        listbox = Listbox(self)
-        listbox.config(width=40, height=200)
-        listbox.pack(fill=Y)
-        file = open('hotels.txt', 'r').readlines()
-        for i in file:
-            listbox.insert(END, i)
-        listbox.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=listbox.yview)
+        self.configure(background='black')
+
+        hotel_data = get_hotel_data("New York City Hotels")
+        df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
+        frame = tk.Frame(self)
+        frame.pack(fill='both', expand=True, pady=20, padx=10)
+        pt = Table(frame, dataframe=df)
+        pt.show()
 
 
 class NYWeather(tk.Frame):
@@ -242,17 +247,19 @@ class NYWeather(tk.Frame):
         forecast = weather[0]
         current = weather[1]
         temp = weather[2], "F"
+        try:
+            # background image using my image microservice API
+            image = get_imageAPI(0, current)
+            response = requests.get(image)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
 
-        # background image using my image microservice API
-        image = get_imageAPI(0, current)
-        response = requests.get(image)
-        img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-
-        # Display image on a Label widget.
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+            # Display image on a Label widget.
+            lbl = tk.Label(self, image=img)
+            lbl.img = img
+            lbl.place(relx=0.5, rely=0.5, anchor='center')
+        finally:
+            self.configure(background="blue")
 
         # add back button and label
         display_back_button_and_title(self, controller, "New York City Weather", NewYork)
@@ -276,13 +283,16 @@ class Chicago(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # background image using my image microservice API
-        image = get_imageAPI(0, "Chicago")
-        response = requests.get(image)
-        img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+        try:
+            image = get_imageAPI(5, "Chicago")
+            response = requests.get(image)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+            lbl = tk.Label(self, image=img)
+            lbl.img = img
+            lbl.place(relx=0.5, rely=0.5, anchor='center')
+        finally:
+            self.configure(background="black")
 
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(StartPage))
@@ -317,16 +327,14 @@ class ChiHotels(tk.Frame):
         # add back button and label
         display_back_button_and_title(self, controller, "Chicago. Stay Awhile.", Chicago)
 
-        scrollbar = Scrollbar(self)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        listbox = Listbox(self)
-        listbox.config(width=40, height=200)
-        listbox.pack(fill=Y)
-        file = open('hotels.txt', 'r').readlines()
-        for i in file:
-            listbox.insert(END, i)
-        listbox.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=listbox.yview)
+        self.configure(background='black')
+
+        hotel_data = get_hotel_data("Chicago Hotels")
+        df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
+        frame = tk.Frame(self)
+        frame.pack(fill='both', expand=True, pady=20, padx=10)
+        pt = Table(frame, dataframe=df)
+        pt.show()
 
 
 class ChiWeather(tk.Frame):
@@ -337,21 +345,22 @@ class ChiWeather(tk.Frame):
         # Bailey's weather microservice
         # weather_data = [forecast, current, temp_f]
         weather = get_weather("Chicago")
-
         forecast = weather[0]
         current = weather[1]
         temp = weather[2], "F"
 
-        # background image using my image microservice API
-        image = get_imageAPI(0, current)
-        response = requests.get(image)
-        img_data = response.content
-        img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-
-        # Display image on a Label widget.
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+        try:
+            # background image using my image microservice API
+            image = get_imageAPI(1, current)
+            response = requests.get(image)
+            img_data = response.content
+            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+            # Display image on a Label widget.
+            lbl = tk.Label(self, image=img)
+            lbl.img = img
+            lbl.place(relx=0.5, rely=0.5, anchor='center')
+        finally:
+            self.configure(background="blue")
 
         # add back button and label
         display_back_button_and_title(self, controller, "Chicago Weather", Chicago)

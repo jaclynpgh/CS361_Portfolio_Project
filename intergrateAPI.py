@@ -26,7 +26,7 @@ def get_imageAPI(index, query):
 
 
 def get_yelp_info(city, state):
-    """Sam's microservice to return Yelp restaurant infor"""
+    """Sam's microservice to return Yelp restaurant info"""
     imageAPI_url = 'https://yelp-sc.herokuapp.com/'
     try:
         response = requests.get(imageAPI_url + city + state)
@@ -43,7 +43,7 @@ def get_yelp_info(city, state):
         print(f'Other error occurred: {err}')
 
 def get_weather(city):
-    """Bailey's microservice to return weather data"""
+    """Bailey's microservice to return weather data, must be VPNed in to OSU server"""
     weather_url = 'http://flip1.engr.oregonstate.edu:5454/?city='
     try:
         response = requests.get(weather_url + city)
@@ -58,7 +58,6 @@ def get_weather(city):
         weather_data = [forecast, current, temp_f]
 
         return weather_data
-
 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
