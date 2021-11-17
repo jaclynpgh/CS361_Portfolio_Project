@@ -16,6 +16,7 @@ from PIL import ImageTk, Image
 from intergrateAPI import get_imageAPI, get_yelp_info, get_weather
 from hoteldata import get_hotel_data
 
+
 LARGE_FONT = ("Calibri", 15)
 HEADING = ("Calibri", 24, 'bold')
 SUBTITLE = ("Calibri", 20, 'bold')
@@ -86,6 +87,9 @@ class Pittsburgh(tk.Frame):
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
+        # error handling if no image is found
+        except:
+            pass
         finally:
             self.configure(background="black")
 
@@ -143,9 +147,8 @@ class PittWeather(tk.Frame):
         forecast = weather[0]
         current = weather[1]
         temp = weather[2], "F"
-            # error protection, if no photo find, set background
+        # error protection, if no photo find, set background
         try:
-
             # background image using my image microservice API
             image = get_imageAPI(4, current)
             response = requests.get(image)
@@ -155,11 +158,15 @@ class PittWeather(tk.Frame):
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
+         # error handling if no image is found
+        except:
+            pass
         finally:
             self.configure(background='blue')
 
         # add back button and label
         display_back_button_and_title(self, controller, "Pittsburgh Weather", Pittsburgh)
+        # display weather data
         label1 = tk.Label(self, text="Forecast:", font=HEADING)
         label1.pack(anchor='center', pady=10)
         label1 = tk.Label(self, text=forecast, font=SUBTITLE)
@@ -185,11 +192,13 @@ class NewYork(tk.Frame):
             response = requests.get(image)
             img_data = response.content
             img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-
             # Display image on a Label widget.
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
+        # error handling if no image is found
+        except:
+            pass
         finally:
             self.configure(background="black")
 
@@ -258,11 +267,16 @@ class NYWeather(tk.Frame):
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
+        # error handling if no image is found
+        except:
+            pass
         finally:
             self.configure(background="blue")
 
         # add back button and label
         display_back_button_and_title(self, controller, "New York City Weather", NewYork)
+
+        # display weather data
         label1 = tk.Label(self, text="Forecast:", font=HEADING)
         label1.pack(anchor='center', pady=10)
         label1 = tk.Label(self, text=forecast, font=SUBTITLE)
@@ -291,6 +305,9 @@ class Chicago(tk.Frame):
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
+        # error handling if no image is found
+        except:
+            pass
         finally:
             self.configure(background="black")
 
@@ -342,7 +359,7 @@ class ChiWeather(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # Bailey's weather microservice
+        # Bailey's weather microservice, must be connected to OSU server
         # weather_data = [forecast, current, temp_f]
         weather = get_weather("Chicago")
         forecast = weather[0]
@@ -359,11 +376,16 @@ class ChiWeather(tk.Frame):
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
+        # error handling if no image is found
+        except:
+            pass
         finally:
             self.configure(background="blue")
 
         # add back button and label
         display_back_button_and_title(self, controller, "Chicago Weather", Chicago)
+
+        # display weather data
         label1 = tk.Label(self, text="Forecast:", font=HEADING)
         label1.pack(anchor='center', pady=10)
         label1 = tk.Label(self, text=forecast, font=SUBTITLE)
