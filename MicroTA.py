@@ -122,41 +122,7 @@ class PittWeather(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # Bailey's weather microservice
-        weather = get_weather("Pittsburgh")
-
-        forecast = weather[0]
-        current = weather[1]
-        temp = weather[2], "F"
-
-        # error protection, if no photo find, set background
-        try:
-            # background image using my image microservice API
-            image = get_imageAPI(0, current)
-            response = requests.get(image)
-            img_data = response.content
-            display_weather_image(self, img_data)
-        # error handling if no image is found
-        except:
-            pass
-        finally:
-            self.configure(background='blue')
-
-        # add back button and label
-        display_back_button_and_title(self, controller, "Pittsburgh Weather", Pittsburgh)
-        # display weather data
-        label1 = tk.Label(self, text="Forecast:", font=HEADING)
-        label1.pack(anchor='center', pady=10)
-        label1 = tk.Label(self, text=forecast, font=SUBTITLE)
-        label1.pack(anchor='center', pady=10)
-        label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
-        label2.pack(anchor='center', pady=10)
-        label2 = tk.Label(self, text=current, font=SUBTITLE)
-        label2.pack(anchor='center', pady=10)
-        label3 = tk.Label(self, text="Temperature:", font=HEADING)
-        label3.pack(anchor='center', pady=10)
-        label3 = tk.Label(self, text=temp, font=SUBTITLE)
-        label3.pack(anchor='center', pady=10)
+        display_weather_data(self, controller, "Pittsburgh", Pittsburgh)
 
 
 class NewYork(tk.Frame):
@@ -214,41 +180,7 @@ class NYWeather(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # Bailey's weather microservice
-        # weather_data = [forecast, current, temp_f]
-        weather = get_weather("New York City")
-
-        forecast = weather[0]
-        current = weather[1]
-        temp = weather[2], "F"
-        try:
-            # background image using my image microservice API
-            image = get_imageAPI(0, current)
-            response = requests.get(image)
-            img_data = response.content
-            display_weather_image(img_data)
-        # error handling if no image is found
-        except:
-            pass
-        finally:
-            self.configure(background="blue")
-
-        # add back button and label
-        display_back_button_and_title(self, controller, "New York City Weather", NewYork)
-
-        # display weather data
-        label1 = tk.Label(self, text="Forecast:", font=HEADING)
-        label1.pack(anchor='center', pady=10)
-        label1 = tk.Label(self, text=forecast, font=SUBTITLE)
-        label1.pack(anchor='center', pady=10)
-        label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
-        label2.pack(anchor='center', pady=10)
-        label2 = tk.Label(self, text=current, font=SUBTITLE)
-        label2.pack(anchor='center', pady=10)
-        label3 = tk.Label(self, text="Temperature:", font=HEADING)
-        label3.pack(anchor='center', pady=10)
-        label3 = tk.Label(self, text=temp, font=SUBTITLE)
-        label3.pack(anchor='center', pady=10)
+        display_weather_data(self, controller, "New York City", NewYork)
 
 
 class Chicago(tk.Frame):
@@ -307,42 +239,47 @@ class ChiWeather(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # Bailey's weather microservice, must be connected to OSU server
-        # weather_data = [forecast, current, temp_f]
-        weather = get_weather("Chicago")
-        forecast = weather[0]
-        current = weather[1]
-        temp = weather[2], "F"
+        display_weather_data(self, controller, "Chicago", Chicago)
 
-        try:
-            # background image using my image microservice API
-            image = get_imageAPI(0, current)
-            response = requests.get(image)
-            img_data = response.content
-            display_weather_image(self, img_data)
 
-        # error handling if no image is found
-        except:
-            pass
-        finally:
-            self.configure(background="blue")
+def display_weather_data(self, controller, city, frame):
+    """gets weather data from Bailey's microservice and displays it using labels"""
 
-        # add back button and label
-        display_back_button_and_title(self, controller, "Chicago Weather", Chicago)
+    # Bailey's weather microservice, must be connected to OSU server
+    weather = get_weather(city)
+    forecast = weather[0]
+    current = weather[1]
+    temp = weather[2], "F"
 
-        # display weather data
-        label1 = tk.Label(self, text="Forecast:", font=HEADING)
-        label1.pack(anchor='center', pady=10)
-        label1 = tk.Label(self, text=forecast, font=SUBTITLE)
-        label1.pack(anchor='center', pady=10)
-        label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
-        label2.pack(anchor='center', pady=10)
-        label2 = tk.Label(self, text=current, font=SUBTITLE)
-        label2.pack(anchor='center', pady=10)
-        label3 = tk.Label(self, text="Temperature:", font=HEADING)
-        label3.pack(anchor='center', pady=10)
-        label3 = tk.Label(self, text=temp, font=SUBTITLE)
-        label3.pack(anchor='center', pady=10)
+
+    # background image that corresponds to weather using my image microservice API
+    image = get_imageAPI(0, current)
+    # use stock image if no image is available
+    if image is None:
+        image_path = 'photos/weather.png'
+        display_stock_image(self, image_path)
+    else:
+        response = requests.get(image)
+        img_data = response.content
+        display_weather_image(self, img_data)
+
+
+    # add back button and title label
+    display_back_button_and_title(self, controller, city + " Weather", frame)
+
+    # display weather data
+    label1 = tk.Label(self, text="Forecast:", font=HEADING)
+    label1.pack(anchor='center', pady=10)
+    label1 = tk.Label(self, text=forecast, font=SUBTITLE)
+    label1.pack(anchor='center', pady=10)
+    label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
+    label2.pack(anchor='center', pady=10)
+    label2 = tk.Label(self, text=current, font=SUBTITLE)
+    label2.pack(anchor='center', pady=10)
+    label3 = tk.Label(self, text="Temperature:", font=HEADING)
+    label3.pack(anchor='center', pady=10)
+    label3 = tk.Label(self, text=temp, font=SUBTITLE)
+    label3.pack(anchor='center', pady=10)
 
 
 def display_yelp_data(self, city, state):
@@ -355,12 +292,14 @@ def display_yelp_data(self, city, state):
     pt = Table(frame, dataframe=df)
     pt.show()
 
+
 def display_stock_image(self, image_path):
     """displays stock image"""
     img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
     lbl = tk.Label(self, image=img)
     lbl.img = img
     lbl.place(relx=0.5, rely=0.5, anchor='center')
+
 
 def display_weather_image(self, image_data):
     """displays the current image from the image microservice"""
