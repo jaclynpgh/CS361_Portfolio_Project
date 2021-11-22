@@ -14,7 +14,6 @@ def get_imageAPI(index, query):
         response.raise_for_status()
         # access JSON content
         jsonResponse = response.json()
-        # print(jsonResponse) - run to print all of json data
         # grabs image url from json based on index
         image = list(jsonResponse.values())[index]
         return image

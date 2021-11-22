@@ -12,15 +12,12 @@ def image_scraper(site):
     :param http url ex. https://www.cookinglight.com
     :return dictionary key:alt text; value: source link"""
 
-
     response = requests.get(site)
-
     soup = BeautifulSoup(response.text, 'html.parser')
     img_tags = soup.find_all('img')
-    # conditional for sites that use meta dara
+    # conditional for sites that use meta data
     if len(img_tags) == 0:
         img_tags = soup.find_all("meta", property="og:image")
-
 
     # create dictionary to add image alt tag and source link
     images = {}
@@ -37,8 +34,6 @@ def image_scraper(site):
         except:
             pass
     return images
-
-
 
 
 if __name__ == "__main__":

@@ -420,7 +420,7 @@ def display_back_button_and_title(instance, controller, text_title, frame_destin
     home = tk.Button(instance, text="Back", height=1, width=10,
                      command=lambda: controller.show_frame(frame_destination))
     home.pack(side=TOP, pady=5, padx=3, anchor=NW)
-    # label
+    # title label
     label = tk.Label(instance, text=text_title, font=HEADING, bg="black", fg="white")
     label.pack(anchor='center', pady=20)
 
