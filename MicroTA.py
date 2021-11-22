@@ -56,12 +56,8 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         # stock image created via Canva
         image_path = 'MTA.png'
-        display_label(self, image_path)
-        # Display image on a Label widget.
-        # img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-        # lbl = tk.Label(self, image=img)
-        # lbl.img = img
-        # lbl.place(relx=0.5, rely=0.5, anchor='center')
+        display_image_label(self, image_path)
+
         # Display buttons
         b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
         b2 = tk.Button(self, text="New York", height=3, width=10, command=lambda: controller.show_frame(NewYork))
@@ -81,12 +77,7 @@ class Pittsburgh(tk.Frame):
             image = get_imageAPI(1, "Pittsburgh")
             response = requests.get(image)
             img_data = response.content
-            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-
-            # Display image on a Label widget.
-            lbl = tk.Label(self, image=img)
-            lbl.img = img
-            lbl.place(relx=0.5, rely=0.5, anchor='center')
+            display_image_label(img_data)
         # error handling if no image is found
         except:
             pass
@@ -153,11 +144,7 @@ class PittWeather(tk.Frame):
             image = get_imageAPI(4, current)
             response = requests.get(image)
             img_data = response.content
-            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-            # Display image on a Label widget.
-            lbl = tk.Label(self, image=img)
-            lbl.img = img
-            lbl.place(relx=0.5, rely=0.5, anchor='center')
+            display_image_label(img_data)
         # error handling if no image is found
         except:
             pass
@@ -191,11 +178,7 @@ class NewYork(tk.Frame):
             image = get_imageAPI(1, "New York Skyline")
             response = requests.get(image)
             img_data = response.content
-            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-            # Display image on a Label widget.
-            lbl = tk.Label(self, image=img)
-            lbl.img = img
-            lbl.place(relx=0.5, rely=0.5, anchor='center')
+            display_image_label(img_data)
         # error handling if no image is found
         except:
             pass
@@ -261,12 +244,7 @@ class NYWeather(tk.Frame):
             image = get_imageAPI(0, current)
             response = requests.get(image)
             img_data = response.content
-            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-
-            # Display image on a Label widget.
-            lbl = tk.Label(self, image=img)
-            lbl.img = img
-            lbl.place(relx=0.5, rely=0.5, anchor='center')
+            display_image_label(img_data)
         # error handling if no image is found
         except:
             pass
@@ -301,10 +279,7 @@ class Chicago(tk.Frame):
             image = get_imageAPI(5, "Chicago")
             response = requests.get(image)
             img_data = response.content
-            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-            lbl = tk.Label(self, image=img)
-            lbl.img = img
-            lbl.place(relx=0.5, rely=0.5, anchor='center')
+            display_image_label(img_data)
         # error handling if no image is found
         except:
             pass
@@ -371,11 +346,9 @@ class ChiWeather(tk.Frame):
             image = get_imageAPI(1, current)
             response = requests.get(image)
             img_data = response.content
-            img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-            # Display image on a Label widget.
-            lbl = tk.Label(self, image=img)
-            lbl.img = img
-            lbl.place(relx=0.5, rely=0.5, anchor='center')
+
+            display_image_label(self, img_data)
+
         # error handling if no image is found
         except:
             pass
@@ -411,7 +384,7 @@ def display_yelp_data(self, city, state):
     pt.show()
 
 
-def display_label(self, image_path):
+def display_image_label(self, image_path):
     """displays an image label"""
     img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
     lbl = tk.Label(self, image=img)
@@ -432,7 +405,6 @@ def display_back_button_and_title(self, controller, text_title, frame_destinatio
 
 def city_button_style(self, controller, frame_dest1, frame_dest2, frame_dest3):
     """displays info buttons for each city"""
-
     b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(frame_dest1))
     b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(frame_dest2))
     b3 = Button(self, text="Weather", command=lambda: controller.show_frame(frame_dest3))
