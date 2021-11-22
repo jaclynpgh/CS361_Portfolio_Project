@@ -54,9 +54,12 @@ class MicroTA(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        # stock image created via Canva
+        # display stock image created via Canva
         image_path = 'MTA.png'
-        display_image_label(self, image_path)
+        img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        lbl = tk.Label(self, image=img)
+        lbl.img = img
+        lbl.place(relx=0.5, rely=0.5, anchor='center')
 
         # Display buttons
         b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
@@ -77,7 +80,7 @@ class Pittsburgh(tk.Frame):
             image = get_imageAPI(1, "Pittsburgh")
             response = requests.get(image)
             img_data = response.content
-            display_image_label(img_data)
+            display_image_label(self, img_data)
         # error handling if no image is found
         except:
             pass
@@ -132,19 +135,19 @@ class PittWeather(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # Bailey's weather microservice
-        # weather_data = [forecast, current, temp_f]
         weather = get_weather("Pittsburgh")
 
         forecast = weather[0]
         current = weather[1]
         temp = weather[2], "F"
+
         # error protection, if no photo find, set background
         try:
             # background image using my image microservice API
-            image = get_imageAPI(4, current)
+            image = get_imageAPI(0, current)
             response = requests.get(image)
             img_data = response.content
-            display_image_label(img_data)
+            display_image_label(self, img_data)
         # error handling if no image is found
         except:
             pass
@@ -178,7 +181,7 @@ class NewYork(tk.Frame):
             image = get_imageAPI(1, "New York Skyline")
             response = requests.get(image)
             img_data = response.content
-            display_image_label(img_data)
+            display_image_label(self, img_data)
         # error handling if no image is found
         except:
             pass
@@ -343,10 +346,9 @@ class ChiWeather(tk.Frame):
 
         try:
             # background image using my image microservice API
-            image = get_imageAPI(1, current)
+            image = get_imageAPI(0, current)
             response = requests.get(image)
             img_data = response.content
-
             display_image_label(self, img_data)
 
         # error handling if no image is found
@@ -384,9 +386,9 @@ def display_yelp_data(self, city, state):
     pt.show()
 
 
-def display_image_label(self, image_path):
+def display_image_label(self, image_data):
     """displays an image label"""
-    img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+    img = ImageTk.PhotoImage(Image.open(BytesIO(image_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
     lbl = tk.Label(self, image=img)
     lbl.img = img
     lbl.place(relx=0.5, rely=0.5, anchor='center')
