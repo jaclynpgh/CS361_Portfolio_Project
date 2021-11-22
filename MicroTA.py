@@ -55,11 +55,8 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         # display stock image created via Canva
-        image_path = 'MTA.png'
-        img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+        image_path = 'photos/MTA.png'
+        display_stock_image(self, image_path)
 
         # Display buttons
         b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
@@ -75,17 +72,8 @@ class Pittsburgh(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        try:
-            # background image using my image microservice API
-            image = get_imageAPI(1, "Pittsburgh")
-            response = requests.get(image)
-            img_data = response.content
-            display_image_label(self, img_data)
-        # error handling if no image is found
-        except:
-            pass
-        finally:
-            self.configure(background="black")
+        image_path = 'photos/pgh.png'
+        display_stock_image(self, image_path)
 
         # back button
         home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(StartPage))
@@ -147,7 +135,7 @@ class PittWeather(tk.Frame):
             image = get_imageAPI(0, current)
             response = requests.get(image)
             img_data = response.content
-            display_image_label(self, img_data)
+            display_weather_image(self, img_data)
         # error handling if no image is found
         except:
             pass
@@ -176,17 +164,8 @@ class NewYork(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # background image using my image microservice API
-        try:
-            image = get_imageAPI(1, "New York Skyline")
-            response = requests.get(image)
-            img_data = response.content
-            display_image_label(self, img_data)
-        # error handling if no image is found
-        except:
-            pass
-        finally:
-            self.configure(background="black")
+        image_path = 'photos/ny.png'
+        display_stock_image(self, image_path)
 
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(StartPage))
@@ -247,7 +226,7 @@ class NYWeather(tk.Frame):
             image = get_imageAPI(0, current)
             response = requests.get(image)
             img_data = response.content
-            display_image_label(img_data)
+            display_weather_image(img_data)
         # error handling if no image is found
         except:
             pass
@@ -277,17 +256,8 @@ class Chicago(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # background image using my image microservice API
-        try:
-            image = get_imageAPI(5, "Chicago")
-            response = requests.get(image)
-            img_data = response.content
-            display_image_label(img_data)
-        # error handling if no image is found
-        except:
-            pass
-        finally:
-            self.configure(background="black")
+        image_path = 'photos/chi.png'
+        display_stock_image(self, image_path)
 
         home = tk.Button(self, text="Back", height=1, width=10,
                          command=lambda: controller.show_frame(StartPage))
@@ -349,7 +319,7 @@ class ChiWeather(tk.Frame):
             image = get_imageAPI(0, current)
             response = requests.get(image)
             img_data = response.content
-            display_image_label(self, img_data)
+            display_weather_image(self, img_data)
 
         # error handling if no image is found
         except:
@@ -385,9 +355,15 @@ def display_yelp_data(self, city, state):
     pt = Table(frame, dataframe=df)
     pt.show()
 
+def display_stock_image(self, image_path):
+    """displays stock image"""
+    img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+    lbl = tk.Label(self, image=img)
+    lbl.img = img
+    lbl.place(relx=0.5, rely=0.5, anchor='center')
 
-def display_image_label(self, image_data):
-    """displays an image label"""
+def display_weather_image(self, image_data):
+    """displays the current image from the image microservice"""
     img = ImageTk.PhotoImage(Image.open(BytesIO(image_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
     lbl = tk.Label(self, image=img)
     lbl.img = img
