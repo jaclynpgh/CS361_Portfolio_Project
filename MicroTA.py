@@ -400,12 +400,12 @@ class ChiWeather(tk.Frame):
         label3.pack(anchor='center', pady=10)
 
 
-def display_yelp_data(instance, city, state):
+def display_yelp_data(self, city, state):
     """gets restaurant data from Sam's Yelp microservice and displays it in a table
     """
     restaurant_data = get_yelp_info(city, state)
     df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
-    frame = tk.Frame(instance)
+    frame = tk.Frame(self)
     frame.pack(fill='both', expand=True, pady=50)
     pt = Table(frame, dataframe=df)
     pt.show()
