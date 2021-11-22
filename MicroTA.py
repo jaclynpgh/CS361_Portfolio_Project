@@ -16,7 +16,6 @@ from PIL import ImageTk, Image
 from intergrateAPI import get_imageAPI, get_yelp_info, get_weather
 from hoteldata import get_hotel_data
 
-
 LARGE_FONT = ("Calibri", 15)
 HEADING = ("Calibri", 24, 'bold')
 SUBTITLE = ("Calibri", 20, 'bold')
@@ -57,11 +56,12 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         # stock image created via Canva
         image_path = 'MTA.png'
+        display_label(self, image_path)
         # Display image on a Label widget.
-        img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
-        lbl = tk.Label(self, image=img)
-        lbl.img = img
-        lbl.place(relx=0.5, rely=0.5, anchor='center')
+        # img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+        # lbl = tk.Label(self, image=img)
+        # lbl.img = img
+        # lbl.place(relx=0.5, rely=0.5, anchor='center')
         # Display buttons
         b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
         b2 = tk.Button(self, text="New York", height=3, width=10, command=lambda: controller.show_frame(NewYork))
@@ -158,7 +158,7 @@ class PittWeather(tk.Frame):
             lbl = tk.Label(self, image=img)
             lbl.img = img
             lbl.place(relx=0.5, rely=0.5, anchor='center')
-         # error handling if no image is found
+        # error handling if no image is found
         except:
             pass
         finally:
@@ -401,7 +401,8 @@ class ChiWeather(tk.Frame):
 
 
 def display_yelp_data(instance, city, state):
-    """gets restaurant data from Sam's Yelp microservice and displays it in a table"""
+    """gets restaurant data from Sam's Yelp microservice and displays it in a table
+    """
     restaurant_data = get_yelp_info(city, state)
     df = pd.DataFrame(restaurant_data, columns=["Restaurant", "Rating", "Cost", "Vibe"])
     frame = tk.Frame(instance)
@@ -410,25 +411,41 @@ def display_yelp_data(instance, city, state):
     pt.show()
 
 
-def display_back_button_and_title(instance, controller, text_title, frame_destination):
+def display_label(self, image_path):
+    """displays an image label
+    :param image_path: image to display"""
+    img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
+    lbl = tk.Label(self, image=img)
+    lbl.img = img
+    lbl.place(relx=0.5, rely=0.5, anchor='center')
+
+
+def display_back_button_and_title(self, controller, text_title, frame_destination):
     """ displays back button and title label
-       :param instance: declare an instance of the class such as self
+       :param self: declare an instance of the class
        :param controller: class controller
        :param text_title: title text to put on label
        :param frame_destination: class destination when back button is pushed"""
     # back button
-    home = tk.Button(instance, text="Back", height=1, width=10,
+    home = tk.Button(self, text="Back", height=1, width=10,
                      command=lambda: controller.show_frame(frame_destination))
     home.pack(side=TOP, pady=5, padx=3, anchor=NW)
     # title label
-    label = tk.Label(instance, text=text_title, font=HEADING, bg="black", fg="white")
+    label = tk.Label(self, text=text_title, font=HEADING, bg="black", fg="white")
     label.pack(anchor='center', pady=20)
 
 
-def city_button_style(instance, controller, frame_dest1, framedest2, framedest3):
-    b1 = Button(instance, text="Hotels", command=lambda: controller.show_frame(frame_dest1))
-    b2 = Button(instance, text="Restaurants", command=lambda: controller.show_frame(framedest2))
-    b3 = Button(instance, text="Weather", command=lambda: controller.show_frame(framedest3))
+def city_button_style(self, controller, frame_dest1, frame_dest2, frame_dest3):
+    """displays info buttons for each city
+       :param self: declare an instance of the class
+       :param controller: class controller
+       :param frame_dest1: class destination for hotel
+       :param frame_dest2: class destination for restaurant
+       :param frame_dest3: class destination for weather"""
+
+    b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(frame_dest1))
+    b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(frame_dest2))
+    b3 = Button(self, text="Weather", command=lambda: controller.show_frame(frame_dest3))
     b1.grid(row=5, column=2, ipady=20, ipadx=10, padx=20, pady=20)
     b2.grid(row=5, column=5, ipady=20, ipadx=10, padx=20, pady=20)
     b3.grid(row=5, column=8, ipady=20, ipadx=10, padx=20, pady=20)
