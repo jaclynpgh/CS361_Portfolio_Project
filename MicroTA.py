@@ -105,16 +105,7 @@ class PittHotels(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # add back button and label
-        display_back_button_and_title(self, controller, "Pittsburgh. Stay Awhile.", Pittsburgh)
-        self.configure(background='black')
-
-        hotel_data = get_hotel_data("Pittsburgh Hotels")
-        df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
-        frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True, pady=20, padx=10)
-        pt = Table(frame, dataframe=df)
-        pt.show()
+        display_hotel_data(self, controller, "Pittsburgh", Pittsburgh)
 
 
 class PittWeather(tk.Frame):
@@ -162,17 +153,7 @@ class NYHotels(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # add back button and label
-        display_back_button_and_title(self, controller, "New York City. Stay Awhile.", NewYork)
-
-        self.configure(background='black')
-
-        hotel_data = get_hotel_data("New York City Hotels")
-        df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
-        frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True, pady=20, padx=10)
-        pt = Table(frame, dataframe=df)
-        pt.show()
+        display_hotel_data(self, controller, "New York City", NewYork)
 
 
 class NYWeather(tk.Frame):
@@ -221,17 +202,7 @@ class ChiHotels(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # add back button and label
-        display_back_button_and_title(self, controller, "Chicago. Stay Awhile.", Chicago)
-
-        self.configure(background='black')
-
-        hotel_data = get_hotel_data("Chicago Hotels")
-        df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
-        frame = tk.Frame(self)
-        frame.pack(fill='both', expand=True, pady=20, padx=10)
-        pt = Table(frame, dataframe=df)
-        pt.show()
+        display_hotel_data(self, controller, "Chicago", Chicago)
 
 
 class ChiWeather(tk.Frame):
@@ -240,6 +211,22 @@ class ChiWeather(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         display_weather_data(self, controller, "Chicago", Chicago)
+
+
+def display_hotel_data(self, controller, city, frame):
+    """gets hotel information for Google Places API function and displays it in a table"""
+
+    display_back_button_and_title(self, controller, city + ". Stay Awhile.", frame)
+
+    self.configure(background='black')
+
+    # get hotel data from api
+    hotel_data = get_hotel_data(city + " Hotels")
+    df = pd.DataFrame(hotel_data, columns=["Hotel", "Rating", "Address"])
+    frame = tk.Frame(self)
+    frame.pack(fill='both', expand=True, pady=20, padx=10)
+    pt = Table(frame, dataframe=df)
+    pt.show()
 
 
 def display_weather_data(self, controller, city, frame):
@@ -251,7 +238,6 @@ def display_weather_data(self, controller, city, frame):
     current = weather[1]
     temp = weather[2], "F"
 
-
     # background image that corresponds to weather using my image microservice API
     image = get_imageAPI(0, current)
     # use stock image if no image is available
@@ -262,7 +248,6 @@ def display_weather_data(self, controller, city, frame):
         response = requests.get(image)
         img_data = response.content
         display_weather_image(self, img_data)
-
 
     # add back button and title label
     display_back_button_and_title(self, controller, city + " Weather", frame)
