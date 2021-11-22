@@ -412,8 +412,7 @@ def display_yelp_data(self, city, state):
 
 
 def display_label(self, image_path):
-    """displays an image label
-    :param image_path: image to display"""
+    """displays an image label"""
     img = ImageTk.PhotoImage(Image.open(image_path).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
     lbl = tk.Label(self, image=img)
     lbl.img = img
@@ -421,11 +420,7 @@ def display_label(self, image_path):
 
 
 def display_back_button_and_title(self, controller, text_title, frame_destination):
-    """ displays back button and title label
-       :param self: declare an instance of the class
-       :param controller: class controller
-       :param text_title: title text to put on label
-       :param frame_destination: class destination when back button is pushed"""
+    """ displays back button and title label"""
     # back button
     home = tk.Button(self, text="Back", height=1, width=10,
                      command=lambda: controller.show_frame(frame_destination))
@@ -436,12 +431,7 @@ def display_back_button_and_title(self, controller, text_title, frame_destinatio
 
 
 def city_button_style(self, controller, frame_dest1, frame_dest2, frame_dest3):
-    """displays info buttons for each city
-       :param self: declare an instance of the class
-       :param controller: class controller
-       :param frame_dest1: class destination for hotel
-       :param frame_dest2: class destination for restaurant
-       :param frame_dest3: class destination for weather"""
+    """displays info buttons for each city"""
 
     b1 = Button(self, text="Hotels", command=lambda: controller.show_frame(frame_dest1))
     b2 = Button(self, text="Restaurants", command=lambda: controller.show_frame(frame_dest2))
