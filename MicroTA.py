@@ -295,7 +295,7 @@ def display_weather_image(self, image_data):
 
 
 def display_back_button_and_title(self, controller, text_title, frame_destination):
-    """ displays back button and title label"""
+    """ displays back button and title label using .pack"""
     # back button
     home = tk.Button(self, text="Back", height=1, width=10,
                      command=lambda: controller.show_frame(frame_destination))
