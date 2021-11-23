@@ -12,7 +12,7 @@ from tkinter.ttk import *
 from pandastable import Table
 import pandas as pd
 import requests
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, UnidentifiedImageError
 from intergrateAPI import get_imageAPI, get_yelp_info, get_weather
 from hoteldata import get_hotel_data
 
@@ -72,15 +72,7 @@ class Pittsburgh(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        image_path = 'photos/pgh.png'
-        display_stock_image(self, image_path)
-
-        # back button
-        home = tk.Button(self, text="Back", height=1, width=10, command=lambda: controller.show_frame(StartPage))
-        home.grid(row=0, pady=10, padx=5)
-        # title label
-        label = tk.Label(self, text="Pittsburgh. Let's Plan.", font=HEADING)
-        label.grid(row=1, column=5, pady=50, padx=50)
+        display_city_page(self, controller, 'photos/pgh.png', "Pittsburgh. Let's Plan.")
 
         # styling and frame destination for buttons
         city_button_style(self, controller, PittHotels, PittRestaurants, PittWeather)
@@ -121,15 +113,8 @@ class NewYork(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        image_path = 'photos/ny.png'
-        display_stock_image(self, image_path)
+        display_city_page(self, controller, 'photos/ny.png', "New York. Let's Plan.")
 
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(StartPage))
-        home.grid(row=0, pady=10, padx=5)
-
-        label = tk.Label(self, text="New York. Let's Plan.", font=HEADING)
-        label.grid(row=1, column=5, pady=50, padx=50)
         # styling and frame destination for buttons
         city_button_style(self, controller, NYHotels, NYRestaurants, NYWeather)
 
@@ -169,16 +154,7 @@ class Chicago(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        image_path = 'photos/chi.png'
-        display_stock_image(self, image_path)
-
-        home = tk.Button(self, text="Back", height=1, width=10,
-                         command=lambda: controller.show_frame(StartPage))
-        home.grid(row=0, pady=10, padx=5)
-
-        label = tk.Label(self, text="Chicago. Let's Plan.", font=HEADING)
-        label.grid(row=1, column=5, pady=50, padx=50)
-
+        display_city_page(self, controller, 'photos/chi.png', "Chicago. Let's Plan.")
         # styling and frame destination for buttons
         city_button_style(self, controller, ChiHotels, ChiRestaurants, ChiWeather)
 
@@ -239,19 +215,24 @@ def display_weather_data(self, controller, city, frame):
     temp = weather[2], "F"
 
     # background image that corresponds to weather using my image microservice API
-    image = get_imageAPI(0, current)
-    # use stock image if no image is available
-    if image is None:
-        image_path = 'photos/weather.png'
-        display_stock_image(self, image_path)
-    else:
+    try:
+        image = get_imageAPI(0, current)
         response = requests.get(image)
         img_data = response.content
         display_weather_image(self, img_data)
+    # error handling if no image available, display stock image
+    except UnidentifiedImageError:
+        image_path = 'photos/weather.png'
+        display_stock_image(self, image_path)
 
     # add back button and title label
     display_back_button_and_title(self, controller, city + " Weather", frame)
+    # display labels
+    weather_labels(self, forecast, current, temp)
 
+
+def weather_labels(self, forecast, current, temp):
+    """displays weather labels"""
     # display weather data
     label1 = tk.Label(self, text="Forecast:", font=HEADING)
     label1.pack(anchor='center', pady=10)
@@ -288,6 +269,7 @@ def display_stock_image(self, image_path):
 
 def display_weather_image(self, image_data):
     """displays the current image from the image microservice"""
+
     img = ImageTk.PhotoImage(Image.open(BytesIO(image_data)).resize((WIDTH, HEIGHT), Image.ANTIALIAS))
     lbl = tk.Label(self, image=img)
     lbl.img = img
@@ -303,6 +285,18 @@ def display_back_button_and_title(self, controller, text_title, frame_destinatio
     # title label
     label = tk.Label(self, text=text_title, font=HEADING, bg="black", fg="white")
     label.pack(anchor='center', pady=20)
+
+
+def display_city_page(self, controller, photo, title):
+    image_path = photo
+    display_stock_image(self, image_path)
+
+    home = tk.Button(self, text="Back", height=1, width=10,
+                     command=lambda: controller.show_frame(StartPage))
+    home.grid(row=0, pady=10, padx=5)
+
+    label = tk.Label(self, text=title, font=HEADING)
+    label.grid(row=1, column=5, pady=50, padx=50)
 
 
 def city_button_style(self, controller, frame_dest1, frame_dest2, frame_dest3):
