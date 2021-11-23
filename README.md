@@ -21,3 +21,6 @@
 ## Integration
 #### A video showcasing how I integrated my teammate's microservices into my project:
 https://vimeo.com/644174803
+
+## Project Showcase
+<div style="padding:67.92% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/649264258?h=01f64310e6&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="CS361 Portfolio Project: Micro Travel Agent"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
