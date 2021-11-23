@@ -1,6 +1,6 @@
 
 
-api_key = "AIzaSyCw496DJw7o513U89nh2akKBnWtEbdPQ4Y"
+api_key = "" #Obtain your own Google Places API ket to run
 
 import requests
 from requests.exceptions import HTTPError
