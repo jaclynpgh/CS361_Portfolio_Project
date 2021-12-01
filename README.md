@@ -18,6 +18,9 @@
 ##### For example https://websiteimagescraper.herokuapp.com/https://www.cookinglight.com/recipes/vegetarian-green-curry-stew
 ##### Returns { image title : image.jpg }
 
-## Integration
+## Integration Video
 #### A video showcasing how I integrated my teammate's microservices into my project:
 https://vimeo.com/644174803
+
+## Project Showcase Video
+https://vimeo.com/649264258

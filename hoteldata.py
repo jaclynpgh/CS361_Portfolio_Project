@@ -1,6 +1,6 @@
 
 
-api_key = "AIzaSyCw496DJw7o513U89nh2akKBnWtEbdPQ4Y"
+api_key = " " #Input your own Google Places Api Key here
 
 import requests
 from requests.exceptions import HTTPError
