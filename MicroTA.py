@@ -59,12 +59,9 @@ class StartPage(tk.Frame):
         display_stock_image(self, image_path)
 
         # Display buttons
-        b1 = tk.Button(self, text="Pittsburgh", height=3, width=10, command=lambda: controller.show_frame(Pittsburgh))
-        b2 = tk.Button(self, text="New York", height=3, width=10, command=lambda: controller.show_frame(NewYork))
-        b3 = tk.Button(self, text="Chicago", height=3, width=10, command=lambda: controller.show_frame(Chicago))
-        b1.place(rely=0.5, relx=0.2, anchor="center")
-        b2.place(rely=0.5, relx=0.5, anchor="center")
-        b3.place(rely=0.5, relx=0.8, anchor="center")
+        start_buttons(self, controller, "Pittsburgh", Pittsburgh, 0.2)
+        start_buttons(self, controller, "New York", NewYork, 0.5)
+        start_buttons(self, controller, "Chicago", Chicago, 0.8)
 
 
 class Pittsburgh(tk.Frame):
@@ -233,19 +230,20 @@ def display_weather_data(self, controller, city, frame):
 
 def weather_labels(self, forecast, current, temp):
     """displays weather labels"""
+
     # display weather data
-    label1 = tk.Label(self, text="Forecast:", font=HEADING)
-    label1.pack(anchor='center', pady=10)
-    label1 = tk.Label(self, text=forecast, font=SUBTITLE)
-    label1.pack(anchor='center', pady=10)
-    label2 = tk.Label(self, text="Current Conditions:", font=HEADING)
-    label2.pack(anchor='center', pady=10)
-    label2 = tk.Label(self, text=current, font=SUBTITLE)
-    label2.pack(anchor='center', pady=10)
-    label3 = tk.Label(self, text="Temperature:", font=HEADING)
-    label3.pack(anchor='center', pady=10)
-    label3 = tk.Label(self, text=temp, font=SUBTITLE)
-    label3.pack(anchor='center', pady=10)
+    create_label(self, "Forecast:", HEADING)
+    create_label(self, forecast, SUBTITLE)
+    create_label(self, "Current Conditions:", HEADING)
+    create_label(self, current, SUBTITLE)
+    create_label(self, "Temperature:", HEADING)
+    create_label(self, temp, SUBTITLE)
+
+
+def create_label(self, text, font):
+    """creates label"""
+    label = tk.Label(self, text=text, font=font)
+    label.pack(anchor='center', pady=10)
 
 
 def display_yelp_data(self, city, state):
@@ -297,6 +295,13 @@ def display_city_page(self, controller, photo, title):
 
     label = tk.Label(self, text=title, font=HEADING)
     label.grid(row=1, column=5, pady=50, padx=50)
+
+
+def start_buttons(self, controller, text, frame, x_position):
+    """displays start page buttons"""
+
+    button = tk.Button(self, text=text, height=3, width=10, command=lambda: controller.show_frame(frame))
+    button.place(rely=0.5, relx=x_position, anchor="center")
 
 
 def city_button_style(self, controller, frame_dest1, frame_dest2, frame_dest3):
